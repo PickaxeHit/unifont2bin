@@ -8,6 +8,21 @@ const downloadMirror = "https://mirrors.tuna.tsinghua.edu.cn/gnu";
 // const downloadMirror = "https://unifoundry.com/pub";
 // const downloadMirror = "https://ftpmirror.gnu.org";
 
+if (fs.existsSync("./out")) {
+    files = fs.readdirSync("./out");
+    files.forEach(function (file, index) {
+        var curPath = "./out" + "/" + file;
+        if (fs.statSync(curPath).isDirectory()) {
+            deleteFile(curPath);
+        } else {
+            fs.unlinkSync(curPath);
+        }
+    });
+    fs.rmdirSync("./out");
+}
+
+fs.mkdirSync("./out");
+
 function download(url, dest, cb) {
     var file = fs.createWriteStream(dest);
     https.get(url, function (response) {
